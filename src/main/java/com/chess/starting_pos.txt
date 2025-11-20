@@ -1,18 +1,44 @@
-            //white team
-            new pawn('w', 1,0, true), 
-            new pawn('w', 1,1, true), 
-            new pawn('w', 1,2, true), 
-            new pawn('w', 1,3, true), 
-            new pawn('w', 1,4, true), 
-            new pawn('w', 1,5, true), 
-            new pawn('w', 1,6, true), 
-            new pawn('w', 1,7, true), 
+            new pawn('w', 1,0), 
+            new pawn('w', 1,1), 
+            new pawn('w', 1,2), 
+            new pawn('w', 1,3), 
+            new pawn('w', 1,4), 
+            new pawn('w', 1,5), 
+            new pawn('w', 1,6), 
+            new pawn('w', 1,7), 
+
+            new king('w', 0, 3),
+            new queen('w', 0, 4),
+
+            new tower('w', 0, 0),
+            new tower('w', 0, 7),
+
+            new bishop('w', 0, 2),
+            new bishop('w', 0, 5),
+
+            new knight('w', 0, 1),
+            new knight('w', 0, 6),
+            
             //black team
-            new pawn('b', 6,0, true), 
-            new pawn('b', 6,1, true), 
-            new pawn('b', 6,2, true), 
-            new pawn('b', 6,3, true), 
-            new pawn('b', 6,4, true), 
-            new pawn('b', 6,5, true), 
-            new pawn('b', 6,6, true), 
-            new pawn('b', 6,7, true), 
+            
+            //pawns
+            new pawn('b', 6,0), 
+            new pawn('b', 6,1), 
+            new pawn('b', 6,2), 
+            new pawn('b', 6,3), 
+            new pawn('b', 6,4), 
+            new pawn('b', 6,5), 
+            new pawn('b', 6,6), 
+            new pawn('b', 6,7), 
+            
+            new king('b', 7, 3),
+            new queen('b', 7, 4),
+            
+            new tower('b', 7, 0),
+            new tower('b', 7, 7),
+            
+            new bishop('b', 7, 2),
+            new bishop('b', 7, 5),
+
+            new knight('b', 7, 1),
+            new knight('b', 7, 6),

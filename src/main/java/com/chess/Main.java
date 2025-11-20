@@ -268,13 +268,9 @@ public class Main {
 
         int kingX = -1;
         int kingY = -1;
-        int kingStartingX = -1;
-        int kingStartingY = -1;
+        int kingStartingX = -2;
+        int kingStartingY = -2;
 
-        int towerX = -1;
-        int towerY = -1;
-        int towerStartingX = -1;
-        int towerStartingY = -1;
 
         for(figure figure : figures){
             if(figure.displayFigure == "K" && figure.team == movingTeam){
@@ -284,19 +280,40 @@ public class Main {
                 kingStartingX = figure.startingX;
                 kingStartingY = figure.startingY;
             }
-            else if(figure.displayFigure == "t" && figure.team == movingTeam){
-                towerX = figure.currentX;
-                towerY = figure.currentY;
-                
-                towerStartingX = figure.startingX;
-                towerStartingY = figure.startingY;
-            }
         }
         
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Enter the coordinates from the tower you want to castle with:  (Format: \"x,y\")");
+        String towerCoord = sc.nextLine();
+        
+        
+        int towerX = Integer.parseInt(towerCoord.split(",")[0]);
+        int towerY = Integer.parseInt(towerCoord.split(",")[1]);
+        
+        int selectedFigure = getFigureFromPos(figures, towerX, towerY, movingTeam);
+        
+        if(selectedFigure != -1){
+            if(!figures[selectedFigure].displayFigure.equals("t") || figures[selectedFigure].team != movingTeam){
+                System.out.println("Not Tower found at this position, try again..");
+                tryCastling(figures, movingTeam, gb);
+                return figures;
+            }
+        }
+        else{
+            System.out.println("Not Tower found at this position, try again..");
+            tryCastling(figures, movingTeam, gb);
+            return figures;
+        }
+
+        int towerStartingX = figures[selectedFigure].startingX;
+        int towerStartingY = figures[selectedFigure].startingY;
+
+
         if(kingX == kingStartingX && kingY == kingStartingY && towerX == towerStartingX && towerY == towerStartingY){ 
             //check if king or tower has moved at all in game
-            int counter = 0;
             if(towerY < kingY){ //check id there are any figures between the tower and the king
+                int counter = towerY +1;
                 while(counter != kingY){
                     if(gb.getFromBoard(counter, towerY).equals(" ")){
                         counter++;
@@ -308,6 +325,7 @@ public class Main {
                 }
             }
             else if(towerY > kingY){
+                int counter = towerY -1;
                 while(counter != kingY){
                     if(gb.getFromBoard(counter, towerY).equals(" ")){
                         counter--;
