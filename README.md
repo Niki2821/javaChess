@@ -5,9 +5,9 @@ A terminal-based chess game written in Java. This personal project lets you play
 ## Features
 
 - Play standard chess against another player in the terminal
-- Simple and user-friendly interface
+- "Simple" and not-so-user-friendly interface
 - Every move is validated
-- Special moves like castlig are supported
+- Special moves like castling are supported
 - This does use linux terminal colors to show teams
 
 ## Getting Started
