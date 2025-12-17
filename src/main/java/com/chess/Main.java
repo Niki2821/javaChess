@@ -312,10 +312,10 @@ public class Main {
 
         if(kingX == kingStartingX && kingY == kingStartingY && towerX == towerStartingX && towerY == towerStartingY){ 
             //check if king or tower has moved at all in game
-            if(towerY < kingY){ //check id there are any figures between the tower and the king
-                int counter = towerY +1;
+            if(towerX < kingY){ //check id there are any figures between the tower and the king
+                int counter = towerX +1;
                 while(counter != kingY){
-                    if(gb.getFromBoard(counter, towerY).equals(" ")){
+                    if(gb.getFromBoard(towerX, counter).equals(" ")){
                         counter++;
                     }
                     else{
@@ -324,10 +324,10 @@ public class Main {
                     }
                 }
             }
-            else if(towerY > kingY){
-                int counter = towerY -1;
+            else if(towerX > kingY){
+                int counter = towerX -1;
                 while(counter != kingY){
-                    if(gb.getFromBoard(counter, towerY).equals(" ")){
+                    if(gb.getFromBoard(towerX, counter).equals(" ")){
                         counter--;
                     }
                     else{
