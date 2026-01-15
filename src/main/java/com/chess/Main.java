@@ -64,6 +64,7 @@ public class Main {
             new knight('b', 7, 6),
         };
         
+        
         refreshBoard(gb, figures);
         
         // region initialize game loop
@@ -77,15 +78,34 @@ public class Main {
             int[] move = getPlayerMove();
             int selectedFigure = getFigureFromPos(figures, move[0], move[1], movingTeam);
             //check if the move is a castling move by checking if the coordinates returned from the move function equal a code
-            if(Arrays.equals(move ,new int[]{101, 100, 100, 100})){
-                figures = tryCastling(figures, movingTeam, gb);
-                refreshBoard(gb, figures);
-                continue;
+            if(Arrays.equals(move, new int[]{101, 100, 100, 100})){
+                figure[] newfigures = tryCastling(figures, movingTeam, gb);
+                if(Arrays.equals(figures, newfigures)){ //check if castling has succeded, if not restart the move for the same team
+                    continue;
+                }
+                else{
+                    figures = newfigures;
+                    refreshBoard(gb, figures);
+                    movingTeam = changeteam(movingTeam);
+                    continue;
+                }
+            }
+            else if(Arrays.equals(move, new int[]{102, 100, 100, 100})){
+                figure[] newfigures = tryPromotion(figures, movingTeam, gb);
+                if(Arrays.equals(figures, newfigures)){//check if promoting has succeded, if not restart the move for the same team
+                    continue;
+                }
+                else{
+                    figures = newfigures;
+                    refreshBoard(gb, figures);
+                    movingTeam = changeteam(movingTeam);
+                    continue;
+                }
             }
             //check if a figure is actually standing at the coordianates the player speciffied
             if(selectedFigure == -1){
                 refreshBoard(gb, figures);
-                System.out.println("No figure found at this position for this team. Please try again..");
+                System.out.println("No figure found at this position for this team. Please try again :(..");
                 continue;
             }
             
@@ -152,6 +172,11 @@ public class Main {
                 //start catling move in the main gameloop by returning impossible coordiantes as a code
                 System.out.println("trying castling...");
                 return new int[]{101, 100, 100, 100};
+            }
+            if(targetFigure.equals("promote")){
+                //start catling move in the main gameloop by returning impossible coordiantes as a code
+                System.out.println("trying promotion...");
+                return new int[]{102, 100, 100, 100};
             }
             if(!Pattern.matches(coordiantesRegex, targetFigure)){
                 System.out.println("Wrong Format, please try again..");
@@ -260,6 +285,7 @@ public class Main {
         System.out.println("Possible Commands are: ");
         System.out.println("'re'        for restarting the current move");
         System.out.println("'castle'    for doing the castling move in your team");
+        System.out.println("'promote'   to promote a pawn to another piece");
         System.out.println("'x,y'       Coordinate format of target figure");
     }
     
@@ -351,6 +377,78 @@ public class Main {
         }
         System.out.println("king or tower not at starting position!");
         return figures;
+    }
+
+    public static figure[] tryPromotion(figure[] figures, char movingTeam, gameBoard gb){
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Enter the coordinates of the pawn that you want to promote: x,y");
+
+        String pawnCoordinates = sc.nextLine();
+
+        int pawnX = Integer.parseInt(pawnCoordinates.split(",")[0]);
+        int pawnY = Integer.parseInt(pawnCoordinates.split(",")[1]);
+
+        int pawnIndex = getFigureFromPos(figures, pawnX, pawnY, movingTeam);
+        
+        if(pawnIndex == -1){
+            System.out.println("no pawn at this position.");
+            return figures;
+        }
+
+        figure pawn = figures[pawnIndex];
+
+
+        int movedDistance = Math.abs(pawn.currentX - pawn.startingX);
+
+        if(movedDistance >= 6){
+            System.out.println("Enterthe figure type you want to promte the pawn to: ('queen', 'tower', 'bishop', 'knight')");
+
+            String promotionType = sc.nextLine();
+
+            switch (promotionType) {
+                case "queen":
+                    figures = addFigure(figures, new queen(movingTeam, pawnX, pawnY));
+                    pawn.isAlive = false;
+                    break;
+                case "tower":
+                    figures = addFigure(figures, new tower(movingTeam, pawnX, pawnY));
+                    pawn.isAlive = false;
+                    break;
+                case "rook":
+                    figures = addFigure(figures, new tower(movingTeam, pawnX, pawnY));
+                    pawn.isAlive = false;
+                    break;
+                case "bishop":
+                    figures = addFigure(figures, new bishop(movingTeam, pawnX, pawnY));
+                    pawn.isAlive = false;
+                    break;
+                case "knight":
+                    figures = addFigure(figures, new knight(movingTeam, pawnX, pawnY));
+                    pawn.isAlive = false;
+                    break;
+                default:
+                    System.out.println("Figure not allowed.");
+                    break;
+            }
+            return figures;
+        }
+        else{
+            System.out.println("This pawn hasnt moved enough to the end yet, it cant be promoted.");
+            return figures;
+        }
+    }
+
+    public static figure[] addFigure(figure[] figures, figure newFigure){
+        figure[] newFigures = new figure[figures.length + 1]; 
+
+        for (int i = 0; i < figures.length; i++){
+            newFigures[i] = figures[i]; 
+        }
+
+        newFigures[figures.length] = newFigure; //hier kein +1 weil length ja die länge ab 1 anfängt zu zählen
+
+        return newFigures;
     }
 
     public static char changeteam(char movingTeam){
